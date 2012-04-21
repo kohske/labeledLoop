@@ -35,14 +35,11 @@
 #'   }
 #' }
 `%._.%` <- function(label, statement) {
-  f <- function(statement) {
-    res <- structure(list(name = label, exit = environment()), class = "restart")
-    .Internal(.addRestart(res))
-    statement
-  }
   label <- substitute(label)
   if (!is.character(label)) label <- deparse(substitute(label))
-  f(statement)
+  arg <- list(as.name("statement"), label)
+  names(arg) <- c("expr", label)
+  do.call("withRestarts", arg)
   invisible()
 }
 
